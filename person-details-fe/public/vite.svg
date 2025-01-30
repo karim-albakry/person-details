@@ -1,0 +1,18 @@
+<svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="64" 
+    height="64" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="#333" 
+    stroke-width="2" 
+    stroke-linecap="round" 
+    stroke-linejoin="round">
+    <!-- Head -->
+    <circle cx="12" cy="7" r="4" fill="#FFCC80" stroke="none"/>
+    <!-- Body -->
+    <path d="M5 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2" fill="#90CAF9" stroke="none"/>
+    <!-- Outline -->
+    <circle cx="12" cy="7" r="4" stroke="#333"/>
+    <path d="M5 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2" stroke="#333"/>
+</svg>
