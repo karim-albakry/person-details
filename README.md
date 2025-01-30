@@ -15,7 +15,7 @@ yarn dev
 Runs on http://localhost:5173
 
 
-### **1️⃣ Run Locally Without Docker**
+### **2️⃣ Run with Docker Compose**
 To run both frontend & backend using Docker:
 
 ```sh
