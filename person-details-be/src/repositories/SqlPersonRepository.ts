@@ -22,19 +22,19 @@ export class SqlPersonRepository implements IPersonRepository {
     country: string = ""
   ): Promise<any[]> {
     let sqlQuery = `
-    SELECT TRIM(name) as name, 
-           TRIM(telephone_number) as telephone_number, 
-           TRIM(address) as address, 
-           TRIM(country) as country 
+    SELECT name as name, 
+           telephone_number as telephone_number, 
+           address as address, 
+           country as country 
     FROM person_details WHERE 1=1
   `;
   
   if (name) {
-    sqlQuery += ` AND (TRIM(name) ILIKE '%${name.trim()}%' OR TRIM(name) ILIKE '% ${name.trim()}%')`; 
+    sqlQuery += ` AND (name ILIKE '%${name.trim()}%' OR name ILIKE '% ${name.trim()}%')`; 
   }
-  if (phone) sqlQuery += ` AND TRIM(telephone_number) ILIKE '%${phone.trim()}%'`;
-  if (address) sqlQuery += ` AND TRIM(address) ILIKE '%${address.trim()}%'`;
-  if (country) sqlQuery += ` AND TRIM(country) ILIKE '%${country.trim()}%'`;
+  if (phone) sqlQuery += ` AND telephone_number ILIKE '%${phone.trim()}%'`;
+  if (address) sqlQuery += ` AND address ILIKE '%${address.trim()}%'`;
+  if (country) sqlQuery += ` AND country ILIKE '%${country.trim()}%'`;
 
     try {
       const res = await this.pool.query(sqlQuery);

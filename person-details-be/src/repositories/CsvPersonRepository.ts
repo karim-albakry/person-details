@@ -1,6 +1,9 @@
 import fs from "fs";
 import csvParser from "csv-parser";
 import { IPersonRepository } from "./IPersonRepository";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export class CsvPersonRepository implements IPersonRepository {
   async getPersons(
@@ -11,34 +14,41 @@ export class CsvPersonRepository implements IPersonRepository {
   ): Promise<any[]> {
     return new Promise<any[]>((resolve, reject) => {
       const results: any[] = [];
-      fs.createReadStream("./src/data/persons.csv")
+
+      // Use the correct CSV file based on the environment
+      const csvFilePath = process.env.CSV_FILE_PATH || "./src/data/persons.csv";
+
+      fs.createReadStream(csvFilePath)
         .pipe(csvParser())
         .on("data", (row) => {
-          const firstName = row["First Name"].trim();
-          const lastName = row["Last Name"].trim();
-          const telephoneNumber = row["Number"].trim();
-          const address = row["Full Address"].split(",")[0].trim();
-          const country = row["Full Address"].split(",")[1].trim();
+          try {
+            const firstName = row["First Name"]?.trim() || "";
+            const lastName = row["Last Name"]?.trim() || "";
+            const telephoneCode = row["Country code"]?.trim() || "";
+            const telephoneNumber = row["Number"]?.trim() || "";
 
-          if (
-            !name &&
-            !phone &&
-            !address &&
-            !country ||
-            (name && (firstName.toLowerCase().includes(name.toLowerCase()) ||
-                      lastName.toLowerCase().includes(name.toLowerCase()))) ||
-            (phone && telephoneNumber.includes(phone)) ||
-            (address && address.toLowerCase().includes(address.toLowerCase())) ||
-            (country && country.toLowerCase().includes(country.toLowerCase()))
-          ) {
-            results.push({
-              "first name": firstName,
-              "last name": lastName,
-              "telephone code": row["Country code"],
-              "telephone number": telephoneNumber,
-              address: address,
-              country: country,
-            });
+            const fullAddress = row["Full Address"]?.trim() || "";
+            const addressParts = fullAddress.split(",");
+            const parsedAddress = addressParts.length > 1 ? addressParts[0].trim() : fullAddress;
+            const parsedCountry = addressParts.length > 1 ? addressParts[1].trim() : "";
+
+            if (
+              (!name || firstName.toLowerCase().includes(name.toLowerCase()) || lastName.toLowerCase().includes(name.toLowerCase())) &&
+              (!phone || telephoneNumber.includes(phone)) &&
+              (!address || parsedAddress.toLowerCase().includes(address.toLowerCase())) &&
+              (!country || parsedCountry.toLowerCase().includes(country.toLowerCase()))
+            ) {
+              results.push({
+                "first name": firstName,
+                "last name": lastName,
+                "telephone code": telephoneCode,
+                "telephone number": telephoneNumber,
+                "address": parsedAddress,
+                "country": parsedCountry,
+              });
+            }
+          } catch (error) {
+            console.error("❌ CSV Parsing Error:", error);
           }
         })
         .on("end", () => resolve(results))
