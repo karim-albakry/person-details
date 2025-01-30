@@ -4,6 +4,30 @@ services:
   frontend:
     build: ./person-details-fe
     ports:
-      - "5173:80"
+      - "${FRONTEND_PORT:-5173}:80"  # Uses FRONTEND_PORT from .env, defaults to 5173
+    depends_on:
+      - backend
+    env_file:
+      - ./person-details-fe/.env
+
+  backend:
+    build: ./person-details-be
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"  # Uses BACKEND_PORT from .env, defaults to 3000
+    depends_on:
+      - database
+    env_file:
+      - ./person-details-be/.env
+
+  database:
+    image: postgres
+    container_name: person-postgres-db
+    restart: always
     environment:
-      - VITE_BACKEND_URL=http://localhost:3000/api
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: persons_db
+    ports:
+      - "${DB_PORT:-6543}:5432"
+    volumes:
+      - ./person-details-be/database/init.sql:/docker-entrypoint-initdb.d/init.sql

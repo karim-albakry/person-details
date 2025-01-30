@@ -34,12 +34,23 @@ export default function App() {
   };
 
   const applyFilters = () => {
+    const trimmedFilters = {
+      name: filters.name.trim(),
+      phone: filters.phone.trim(),
+      address: filters.address.trim(),
+      country: filters.country.trim(),
+    };
+    
     const filteredData = persons.filter(person =>
-      (filters.name ? person["first name"].toLowerCase().includes(filters.name.toLowerCase()) : true) &&
-      (filters.phone ? person["telephone number"].includes(filters.phone) : true) &&
-      (filters.address ? person["address"].toLowerCase().includes(filters.address.toLowerCase()) : true) &&
-      (filters.country ? person["country"].toLowerCase().includes(filters.country.toLowerCase()) : true)
-    );
+      (trimmedFilters.name
+      ? person["first name"].toLowerCase().includes(trimmedFilters.name.toLowerCase()) ||
+        person["last name"].toLowerCase().includes(trimmedFilters.name.toLowerCase())  
+      : true) &&
+    (trimmedFilters.phone ? person["telephone number"].includes(trimmedFilters.phone) : true) &&
+    (trimmedFilters.address ? person["address"].toLowerCase().includes(trimmedFilters.address.toLowerCase()) : true) &&
+    (trimmedFilters.country ? person["country"].toLowerCase().includes(trimmedFilters.country.toLowerCase()) : true)
+  );
+
     setFilteredPersons(filteredData);
     setCurrentPage(1); // Reset to first page when filters change
   };
