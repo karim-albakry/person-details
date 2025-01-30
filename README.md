@@ -1,8 +1,22 @@
-# Person Details Frontend (React)
+# Person Details Project (Full Stack)
 
-This repository contains the **frontend** of the Person Details application, built with **React**, **Bootstrap**, and containerized using **Docker**.
+This repository contains both the **frontend (React)** and **backend (Node.js/Express)** for the Person Details application.
 
-## 🚀 How to Run the Project
+## 🚀 Quick Start
+
+### **For Linux/macOS Users**
+Run the following command:
+```sh
+./setup.sh
+```
+
+### **For Windows Users**
+Run:
+```bat
+setup.bat
+```
+
+## 🚀 How to Run the Project Manually
 
 ### **1️⃣ Run Locally Without Docker**
 #### **Frontend**
@@ -12,53 +26,35 @@ yarn install
 yarn dev
 ```
 
-- The application will be available at: **http://localhost:5173**
+Runs on http://localhost:5173
 
----
+#### **Backend**
+```sh
+cd person-details-be
+npm install
+npm run dev
+```
+
+Runs on http://localhost:3000/api
 
 ### **2️⃣ Run with Docker Compose**
-If you want to run the frontend using **Docker Compose**:
+To run both frontend & backend using Docker:
 
 ```sh
 docker-compose up --build
 ```
 
-- The **frontend** will be available at: **http://localhost:5173**
+Frontend → http://localhost:5173
 
----
+Backend → http://localhost:3000/api
 
-## 🔧 Environment Variables
-Before running the project, create a **`.env`** file inside the `person-details-fe/` directory:
-
-```
-VITE_BACKEND_URL=http://localhost:3000/api
-```
-
-This configures the frontend to communicate with the backend.
-
----
-
-## 📁 Project Structure
+## 📂 Project Structure
 ```
 person-details/
-│── docker-compose.yml    # Docker Compose configuration
+│── docker-compose.yml    # Docker Compose config
+│── setup.sh              # Setup script for Linux/macOS
+│── setup.bat             # Setup script for Windows
 │── person-details-fe/    # Frontend (React)
-│── README.md             # Project setup instructions
+│── person-details-be/    # Backend (Node.js)
+│── README.md             # Instructions
 ```
-
----
-
-## ✨ Features
-✔️ **Modern UI with React & Bootstrap**
-✔️ **Sorting, Filtering & Pagination**
-✔️ **Loading Spinner & Modals for better UX**
-✔️ **Dockerized for easy deployment**
-
----
-
-## 🔜 Next Steps
-- Integrate the backend (`person-details-be/`)
-- Implement CI/CD for automated deployment
-- Deploy to a cloud provider
-
-Feel free to contribute or suggest improvements! 🚀
