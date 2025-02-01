@@ -48,6 +48,30 @@ Frontend → http://localhost:5173
 
 Backend → http://localhost:3000/api
 
+---
+
+## **🚀 API Documentation**
+### **📌 Endpoint: Get Person Details**
+#### **Request**
+```http
+GET /api/person-details?name=John&phone=1234&address=Main St&country=USA
+```
+#### **Response (Example)**
+```json
+[
+    {
+        "first name": "John",
+        "last name": "Doe",
+        "telephone code": "1",
+        "telephone number": "123456789",
+        "address": "123 Main St",
+        "country": "USA"
+    }
+]
+```
+
+---
+
 ## 📂 Project Structure
 ```
 person-details/

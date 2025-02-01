@@ -7,52 +7,44 @@ import { Spinner } from "react-bootstrap";
 
 export default function App() {
   const [persons, setPersons] = useState([]);
-  const [filteredPersons, setFilteredPersons] = useState([]); // Store filtered data separately
+  const [filteredPersons, setFilteredPersons] = useState([]);
   const [filters, setFilters] = useState({ name: "", phone: "", address: "", country: "" });
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const personsPerPage = 5;
 
+  // Fetch data on mount
   useEffect(() => {
     fetchPersons();
-  }, []); // Fetch data only on mount
+  }, []);
 
+  // Fetch data whenever filters change
   useEffect(() => {
-    applyFilters();
-  }, [filters, persons]); // Apply filters when filters change
+    fetchPersons();
+  }, [filters]);
 
   const fetchPersons = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/person-details`);
-      setPersons(response.data);
-      setFilteredPersons(response.data); // Initially, filtered data is the same as full data
+      // Construct query parameters based on filters
+      const params = new URLSearchParams();
+      if (filters.name) params.append("name", filters.name);
+      if (filters.phone) params.append("phone", filters.phone);
+      if (filters.address) params.append("address", filters.address);
+      if (filters.country) params.append("country", filters.country);
+
+      // Send request with query parameters
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/person-details?${params.toString()}`);
+
+      // Avoid unnecessary re-renders
+      if (JSON.stringify(response.data) !== JSON.stringify(persons)) {
+        setPersons(response.data);
+        setFilteredPersons(response.data);
+      }
     } catch (error) {
       console.error(error);
     }
     setLoading(false);
-  };
-
-  const applyFilters = () => {
-    const trimmedFilters = {
-      name: filters.name.trim(),
-      phone: filters.phone.trim(),
-      address: filters.address.trim(),
-      country: filters.country.trim(),
-    };
-    
-    const filteredData = persons.filter(person =>
-      (trimmedFilters.name
-      ? person["first name"].toLowerCase().includes(trimmedFilters.name.toLowerCase()) ||
-        person["last name"].toLowerCase().includes(trimmedFilters.name.toLowerCase())  
-      : true) &&
-    (trimmedFilters.phone ? person["telephone number"].includes(trimmedFilters.phone) : true) &&
-    (trimmedFilters.address ? person["address"].toLowerCase().includes(trimmedFilters.address.toLowerCase()) : true) &&
-    (trimmedFilters.country ? person["country"].toLowerCase().includes(trimmedFilters.country.toLowerCase()) : true)
-  );
-
-    setFilteredPersons(filteredData);
-    setCurrentPage(1); // Reset to first page when filters change
   };
 
   // Pagination logic
