@@ -1,17 +1,18 @@
 services:
   frontend:
-    build: ./person-details-fe
+    build:
+      context: ./person-details-fe
+      args:
+        - VITE_BACKEND_URL=http://backend:3000/api
     ports:
-      - "${FRONTEND_PORT:-5173}:80"
+      - "5173:80"
     depends_on:
       - backend
-    environment:
-      - VITE_BACKEND_URL=http://backend:3000/api  # Use backend's service name instead of a static port
 
   backend:
     build: ./person-details-be
     ports:
-      - "${BACKEND_PORT:-3000}:3000"
+      - "3000:3000"
     depends_on:
       - database
     environment:
@@ -21,7 +22,7 @@ services:
       - DB_NAME=persons_db
       - DB_PASSWORD=admin
       - DB_PORT=5432
-      - CSV_FILE_PATH=/app/src/data/persons.csv  # Ensure CSV file is read correctly
+      - CSV_FILE_PATH=/app/src/data/persons.csv
 
   database:
     image: postgres

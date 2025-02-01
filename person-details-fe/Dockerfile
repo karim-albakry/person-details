@@ -2,9 +2,13 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 
-# Install dependencies
+# Copy package files and install dependencies
 COPY package.json yarn.lock ./
 RUN yarn install
+
+# Set environment variable for build
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
 
 # Copy source files and build
 COPY . . 
