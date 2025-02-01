@@ -14,8 +14,9 @@ This repository contains both the **frontend (React)** and **backend (Node.js/Ex
        - [1️⃣ Database Setup](#1️⃣-database-setup)
        - [2️⃣ Environment Variables Setup](#2️⃣-environment-variables-setup)
        - [3️⃣ Frontend and Backend Setup](#3️⃣-frontend-and-backend-setup)
-3. [🚀 API Documentation](#-api-documentation)
-4. [📂 Project Structure](#-project-structure)
+3. [🚀 Architecture and Design Patterns](#-architecture-and-design-patterns)
+4. [🚀 API Documentation](#-api-documentation)
+5. [📂 Project Structure](#-project-structure)
 
 ## 🚀 Prerequisites
 
@@ -119,6 +120,22 @@ yarn install
 yarn dev
 ```
 Runs on http://localhost:5173
+
+---
+
+## 🚀 Architecture and Design Patterns
+### **🔹 Architecture**
+- The project follows a **client-server architecture**, where:
+  - The **frontend (React)** serves the UI and consumes the API.
+  - The **backend (Node.js/Express)** processes requests and interacts with two data sources (CSV and PostgreSQL).
+  - The **PostgreSQL database** stores structured data, while a **CSV file** provides an additional data source.
+  - Docker is used for containerized deployment.
+
+### **🔹 Design Pattern**
+- The backend follows the **Repository Pattern**, where:
+  - A `CsvPersonRepository` handles CSV data interactions.
+  - A `SqlPersonRepository` handles PostgreSQL database queries.
+  - A service layer processes business logic before returning results to the API.
 
 ---
 
