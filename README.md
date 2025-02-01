@@ -11,9 +11,11 @@ This repository contains both the **frontend (React)** and **backend (Node.js/Ex
    - [2️⃣ Manual Setup](#2️⃣-manual-setup)
      - [With Docker Compose](#with-docker-compose-full-setup)
      - [Without Docker Compose](#without-docker-compose-only-database-in-docker-frontend--backend-locally)
-3. [🚀 Environment Variables Setup](#-environment-variables-setup)
-4. [🚀 API Documentation](#-api-documentation)
-5. [📂 Project Structure](#-project-structure)
+       - [1️⃣ Database Setup](#1️⃣-database-setup)
+       - [2️⃣ Environment Variables Setup](#2️⃣-environment-variables-setup)
+       - [3️⃣ Frontend and Backend Setup](#3️⃣-frontend-and-backend-setup)
+3. [🚀 API Documentation](#-api-documentation)
+4. [📂 Project Structure](#-project-structure)
 
 ## 🚀 Prerequisites
 
@@ -81,12 +83,13 @@ docker-compose up --build
 
 #### **Without Docker Compose (Only Database in Docker, Frontend & Backend Locally)**
 
+### **1️⃣ Database Setup**
 ##### **Database (Run in Docker)**
 ```sh
 docker run --name person-postgres-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=persons_db -p 5432:5432 -d postgres
 ```
 
-## **🚀 Environment Variables Setup**
+### **2️⃣ Environment Variables Setup**
 Create the required `.env` files for the frontend and backend based on the provided example files:
 
 #### **Backend `.env` file**
@@ -100,6 +103,7 @@ DB_PASSWORD=admin
 DB_PORT=5432
 ```
 
+### **3️⃣ Frontend and Backend Setup**
 #### **Frontend `.env` file**
 Create `person-details-fe/.env` with the following content:
 ```sh
