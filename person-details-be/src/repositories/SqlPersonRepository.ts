@@ -1,8 +1,18 @@
 import { Pool } from "pg";
 import dotenv from "dotenv";
 import { IPersonRepository } from "./IPersonRepository";
+import winston from "winston";
 
 dotenv.config();
+
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "backend.log" }),
+  ],
+});
 
 export class SqlPersonRepository implements IPersonRepository {
   private pool: Pool;
@@ -18,10 +28,10 @@ export class SqlPersonRepository implements IPersonRepository {
   }
 
   async getPersons(
-    name: string = "",
-    phone: string = "",
-    address: string = "",
-    country: string = ""
+    name?: string,
+    phone?: string,
+    address?: string,
+    country?: string
   ): Promise<any[]> {
     let sqlQuery = `
       SELECT name as name, 
@@ -34,28 +44,36 @@ export class SqlPersonRepository implements IPersonRepository {
     const params: any[] = [];
     let paramIndex = 1;
 
-    if (name) {
-      sqlQuery += ` AND (name ILIKE $${paramIndex} OR name ILIKE $${paramIndex + 1})`;
+    if (name && name.trim() !== "") {
+      sqlQuery += ` AND (name ILIKE $${paramIndex} OR name ILIKE $${
+        paramIndex + 1
+      })`;
       params.push(`%${name.trim()}%`, `% ${name.trim()}%`);
       paramIndex += 2;
     }
-    if (phone) {
+    if (phone && phone.trim() !== "") {
       sqlQuery += ` AND telephone_number ILIKE $${paramIndex}`;
       params.push(`%${phone.trim()}%`);
       paramIndex++;
     }
-    if (address) {
+    if (address && address.trim() !== "") {
       sqlQuery += ` AND address ILIKE $${paramIndex}`;
       params.push(`%${address.trim()}%`);
       paramIndex++;
     }
-    if (country) {
+    if (country && country.trim() !== "") {
       sqlQuery += ` AND country ILIKE $${paramIndex}`;
       params.push(`%${country.trim()}%`);
       paramIndex++;
     }
 
     try {
+      logger.info(
+        `Executing SQL Query: ${sqlQuery
+          .replace(/\s+/g, " ")
+          .trim()} with parameters: ${JSON.stringify(params)}`
+      );
+
       const res = await this.pool.query(sqlQuery, params);
 
       return res.rows.map((row) => {
@@ -72,7 +90,7 @@ export class SqlPersonRepository implements IPersonRepository {
         };
       });
     } catch (err) {
-      console.error("❌ SQL Query Execution Error:", err);
+      logger.error("❌ SQL Query Execution Error:", err);
       return [];
     }
   }
