@@ -5,7 +5,9 @@ import { SqlPersonRepository } from "./repositories/SqlPersonRepository";
 import { PersonService } from "./services/PersonService";
 import dotenv from "dotenv";
 
-dotenv.config();
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
 const app = express();
 const port = process.env.PORT || 3000; 

@@ -1,14 +1,12 @@
-version: "3.8"
-
 services:
   frontend:
     build: ./person-details-fe
     ports:
-      - "${FRONTEND_PORT:-5173}:80"  # Expose frontend on a fixed port
+      - "${FRONTEND_PORT:-5173}:80"
     depends_on:
       - backend
-    env_file:
-      - ./person-details-fe/.env  # Ensure frontend environment variables are loaded
+    environment:
+      - VITE_BACKEND_URL=http://backend:3000/api  # Use backend's service name instead of a static port
 
   backend:
     build: ./person-details-be
@@ -16,8 +14,14 @@ services:
       - "${BACKEND_PORT:-3000}:3000"
     depends_on:
       - database
-    env_file:
-      - ./person-details-be/.env  # Use .env file for backend
+    environment:
+      - PORT=3000
+      - DB_USER=admin
+      - DB_HOST=database
+      - DB_NAME=persons_db
+      - DB_PASSWORD=admin
+      - DB_PORT=5432
+      - CSV_FILE_PATH=/app/src/data/persons.csv  # Ensure CSV file is read correctly
 
   database:
     image: postgres
