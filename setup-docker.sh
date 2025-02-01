@@ -6,7 +6,7 @@ set -e
 echo "🚀 Setting up the project..."
 
 # Ensure Docker is installed and accessible
-if ! command -v docker &>/dev/null && ! which docker &>/dev/null; then
+if ! command -v docker &>/dev/null && ! which docker &>/dev/null && ! wslpath "$(command -v docker)" &>/dev/null; then
     echo "❌ Docker is not installed or not in PATH. Please install it first."
     exit 1
 fi
