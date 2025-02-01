@@ -1,40 +1,41 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status
-set -e
+set -e  # Exit on first error
 
 echo "🚀 Setting up the project..."
+echo ""
 
-# Ensure Docker is installed and accessible
-if ! command -v docker &>/dev/null && ! which docker &>/dev/null && ! wslpath "$(command -v docker)" &>/dev/null; then
+# Ensure Docker is installed and running
+if [ -x "$(command -v docker)" ]; then
+    echo "✅ Docker is installed at $(command -v docker)"
+else
     echo "❌ Docker is not installed or not in PATH. Please install it first."
     exit 1
 fi
 
-# Ensure Docker daemon is running
-if ! docker info &>/dev/null; then
-    echo "❌ Docker is installed but the daemon is not running. Start Docker and try again."
+# Ensure Docker Compose is installed and running
+if [ -x "$(command -v docker-compose)" ]; then
+    echo "✅ Docker Compose is installed at $(command -v docker-compose)"
+else
+    echo "❌ Docker Compose is not installed. Please install it first."
     exit 1
 fi
 
-# Ensure Docker Compose is installed and accessible
-if ! command -v docker compose &>/dev/null && ! which docker-compose &>/dev/null; then
-    echo "❌ Docker Compose is not installed or not in PATH. Please install it first."
-    exit 1
-fi
-
-# Create .env files if not exist
+# Create .env files from .env.example if they don't exist
 if [ ! -f "person-details-fe/.env" ]; then
-    echo "Creating frontend .env file..."
+    echo "📝 Creating frontend .env file..."
     cp person-details-fe/.env.example person-details-fe/.env
 fi
 
 if [ ! -f "person-details-be/.env" ]; then
-    echo "Creating backend .env file..."
+    echo "📝 Creating backend .env file..."
     cp person-details-be/.env.example person-details-be/.env
 fi
 
-# Pull Docker images (if needed)
+echo "✅ Environment variables are set."
+echo ""
+
+# Pull latest Docker images (if needed)
 echo "🔄 Pulling necessary Docker images..."
 docker-compose pull
 
