@@ -42,12 +42,17 @@ docker exec -i person-postgres-db psql -U admin -d persons_db -f /init.sql
 echo 📦 Installing backend dependencies...
 cd person-details-be
 npm install
-start npm run dev
+start /b npm run dev
+cd ..
 
 :: Install dependencies and start frontend
-cd ../person-details-fe
+echo 📦 Installing frontend dependencies...
+cd person-details-fe
 yarn install
-start yarn dev
+start /b yarn dev
+cd ..
 
-echo ✅ Manual setup complete! Frontend running at http://localhost:5173, Backend running at http://localhost:3000/api
+echo ✅ Manual setup complete! 
+echo 🔗 Frontend running at http://localhost:5173
+echo 🔗 Backend running at http://localhost:3000/api
 pause
