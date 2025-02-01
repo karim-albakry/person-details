@@ -4,30 +4,33 @@ services:
   frontend:
     build: ./person-details-fe
     ports:
-      - "${FRONTEND_PORT:-5173}:80"  # Uses FRONTEND_PORT from .env, defaults to 5173
+      - "${FRONTEND_PORT:-5173}:80"  # Expose frontend on a fixed port for easier access
     depends_on:
       - backend
-    env_file:
-      - ./person-details-fe/.env
+    environment:
+      - VITE_BACKEND_URL=http://backend:3000/api  # Use backend's service name instead of port
 
   backend:
     build: ./person-details-be
     ports:
-      - "${BACKEND_PORT:-3000}:3000"  # Uses BACKEND_PORT from .env, defaults to 3000
+      - "${BACKEND_PORT:-3000}:3000"
     depends_on:
       - database
-    env_file:
-      - ./person-details-be/.env
+    environment:
+      - PORT=3000
+      - DB_USER=admin
+      - DB_HOST=database 
+      - DB_NAME=persons_db
+      - DB_PASSWORD=admin
+      - DB_PORT=5432
 
   database:
     image: postgres
-    container_name: person-postgres-db
+    container_name: postgres-database
     restart: always
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: persons_db
-    ports:
-      - "${DB_PORT:-6543}:5432"
     volumes:
       - ./person-details-be/database/init.sql:/docker-entrypoint-initdb.d/init.sql
