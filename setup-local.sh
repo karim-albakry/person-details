@@ -18,12 +18,12 @@ else
 fi
 
 # Wait for PostgreSQL to be ready
-echo "⏳ Waiting for PostgreSQL to be ready..."
-until docker exec person-postgres-db pg_isready -U admin -d persons_db > /dev/null 2>&1; do
+echo "⏳ Ensuring PostgreSQL is fully ready..."
+until docker exec person-postgres-db pg_isready -U admin -d persons_db | grep -q "accepting connections"; do
     sleep 2
     echo "🔄 Still waiting for PostgreSQL..."
 done
-echo "✅ PostgreSQL is ready!"
+echo "✅ PostgreSQL is fully ready!"
 
 # Create .env files from .env.example if they don't exist
 if [ ! -f "person-details-fe/.env" ]; then
@@ -55,20 +55,14 @@ yarn install || { echo "❌ Frontend installation failed."; exit 1; }
 cd ..
 echo "✅ Frontend installation completed!"
 
-# Start backend in a new persistent terminal
+# Start backend in the background
 echo "🚀 Starting backend..."
-gnome-terminal -- bash -c "cd person-details-be && npm run dev; exec bash" 2>/dev/null || \
-x-terminal-emulator -e "cd person-details-be && npm run dev" 2>/dev/null || \
-xterm -hold -e "cd person-details-be && npm run dev" 2>/dev/null || \
-konsole -e "cd person-details-be && npm run dev" 2>/dev/null || \
-echo "⚠️ Unable to start backend in a new terminal. Run 'cd person-details-be && npm run dev' manually."
+cd person-details-be && npm run dev & disown
+echo "✅ Backend started in the background!"
 
-# Start frontend in a new persistent terminal
+# Start frontend in the background
 echo "🚀 Starting frontend..."
-gnome-terminal -- bash -c "cd person-details-fe && yarn dev; exec bash" 2>/dev/null || \
-x-terminal-emulator -e "cd person-details-fe && yarn dev" 2>/dev/null || \
-xterm -hold -e "cd person-details-fe && yarn dev" 2>/dev/null || \
-konsole -e "cd person-details-fe && yarn dev" 2>/dev/null || \
-echo "⚠️ Unable to start frontend in a new terminal. Run 'cd person-details-fe && yarn dev' manually."
+cd ../person-details-fe && yarn dev & disown
+echo "✅ Frontend started in the background!"
 
 echo "✅ Project is now running!"
