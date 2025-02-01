@@ -6,13 +6,19 @@ set -e
 echo "🚀 Setting up the project..."
 
 # Ensure Docker is installed and accessible
-if ! docker -v &>/dev/null; then
+if ! command -v docker &>/dev/null && ! which docker &>/dev/null; then
     echo "❌ Docker is not installed or not in PATH. Please install it first."
     exit 1
 fi
 
+# Ensure Docker daemon is running
+if ! docker info &>/dev/null; then
+    echo "❌ Docker is installed but the daemon is not running. Start Docker and try again."
+    exit 1
+fi
+
 # Ensure Docker Compose is installed and accessible
-if ! docker compose version &>/dev/null; then
+if ! command -v docker compose &>/dev/null && ! which docker-compose &>/dev/null; then
     echo "❌ Docker Compose is not installed or not in PATH. Please install it first."
     exit 1
 fi
