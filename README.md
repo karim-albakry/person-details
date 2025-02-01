@@ -148,8 +148,11 @@ GET /api/person-details?name=John&phone=1234&address=Main St&country=USA
 ```
 person-details/
 │── docker-compose.yml    # Docker Compose config
-│── setup.sh              # Setup script for Linux/macOS
-│── setup.bat             # Setup script for Windows
+│── setup-local.sh        # Local setup script for Linux/macOS
+│── setup-local.bat       # Local setup script for Windows
+│── setup-docker.sh       # Docker setup script for Linux/macOS
+│── setup-docker.bat      # Docker setup script for Windows
 │── person-details-fe/    # Frontend (React)
 │── person-details-be/    # Backend (Node.js)
 │── README.md             # Instructions
+```
