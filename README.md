@@ -18,16 +18,39 @@ setup.bat
 
 ## 🚀 How to Run the Project Manually
 
-### **1️⃣ Run Locally Without Docker**
-#### **Frontend**
+### **1️⃣ Prerequisites**
+Before running the project, ensure that **PostgreSQL** is installed. If it's not installed, you can set up a PostgreSQL container using Docker with the following command:
+
 ```sh
-cd person-details-fe
-yarn install
-yarn dev
+docker run --name postgres-container -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=persons_db -p 5432:5432 -d postgres
 ```
 
-Runs on http://localhost:5173
+After setting up the database, **run the following migration** to initialize the database schema:
 
+```sh
+person-details-be\database\init.sql
+```
+### **2️⃣ Environment Variables Setup**
+Create the required `.env` files for the frontend and backend based on the provided example files:
+
+#### **Backend `.env` file**
+Create `person-details-be/.env` with the following content:
+```sh
+PORT=${BACKEND_PORT:-3000}
+DB_USER=admin
+DB_HOST=database
+DB_NAME=persons_db
+DB_PASSWORD=admin
+DB_PORT=${DB_PORT:-5432}
+```
+
+#### **Frontend `.env` file**
+Create `person-details-fe/.env` with the following content:
+```sh
+VITE_BACKEND_URL=http://localhost:${BACKEND_PORT:-3000}/api
+```
+
+### **3️⃣ Run Locally Without Docker**
 #### **Backend**
 ```sh
 cd person-details-be
@@ -37,7 +60,16 @@ npm run dev
 
 Runs on http://localhost:3000/api
 
-### **2️⃣ Run with Docker Compose**
+#### **Frontend**
+```sh
+cd person-details-fe
+yarn install
+yarn dev
+```
+
+Runs on http://localhost:5173
+
+### **4️⃣ Run with Docker Compose**
 To run both frontend & backend using Docker:
 
 ```sh
