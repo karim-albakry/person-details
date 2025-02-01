@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "🚀 Setting up the project manually..."
+echo "\n🚀 Setting up the project manually..."
 
 # Ensure Docker is installed and running
-if ! command -v docker &> /dev/null; then
-    echo "❌ Docker is not installed or running. Please install and start Docker first."
+if ! docker info > /dev/null 2>&1; then
+    echo "❌ Docker is not running. Please start Docker first."
     exit 1
 fi
 
@@ -19,12 +19,12 @@ fi
 
 # Create .env files from .env.example if they don't exist
 if [ ! -f "person-details-fe/.env" ]; then
-    echo "Creating frontend .env file..."
+    echo "📄 Creating frontend .env file..."
     cp person-details-fe/.env.example person-details-fe/.env
 fi
 
 if [ ! -f "person-details-be/.env" ]; then
-    echo "Creating backend .env file..."
+    echo "📄 Creating backend .env file..."
     cp person-details-be/.env.example person-details-be/.env
 fi
 
@@ -39,23 +39,15 @@ docker exec -i person-postgres-db psql -U admin -d persons_db -f /init.sql
 
 # Install backend dependencies
 echo "📦 Installing backend dependencies..."
-cd person-details-be || exit
-npm install
-if [ $? -ne 0 ]; then
-    echo "❌ Backend installation failed."
-    exit 1
-fi
+cd person-details-be || { echo "❌ Backend directory not found!"; exit 1; }
+npm install || { echo "❌ Backend installation failed."; exit 1; }
 cd ..
 echo "✅ Backend installation completed!"
 
 # Install frontend dependencies
 echo "📦 Installing frontend dependencies..."
-cd person-details-fe || exit
-yarn install
-if [ $? -ne 0 ]; then
-    echo "❌ Frontend installation failed."
-    exit 1
-fi
+cd person-details-fe || { echo "❌ Frontend directory not found!"; exit 1; }
+yarn install || { echo "❌ Frontend installation failed."; exit 1; }
 cd ..
 echo "✅ Frontend installation completed!"
 
