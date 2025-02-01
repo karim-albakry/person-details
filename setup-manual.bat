@@ -33,9 +33,10 @@ if not exist "person-details-be\.env" (
 echo ⏳ Waiting for PostgreSQL to be ready...
 timeout /t 5 /nobreak >nul
 
-:: Run database migration inside the Docker container
+:: Run database migration inside the Docker container (Fixed Path Issue)
 echo 🔄 Running database migration inside Docker...
-docker exec -i person-postgres-db psql -U admin -d persons_db -f person-details-be\database\init.sql
+docker cp person-details-be/database/init.sql person-postgres-db:/init.sql
+docker exec -i person-postgres-db psql -U admin -d persons_db -f /init.sql
 
 :: Install dependencies and start backend
 echo 📦 Installing backend dependencies...
