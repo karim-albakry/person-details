@@ -17,6 +17,14 @@ else
     echo "✅ PostgreSQL container is already running."
 fi
 
+# Wait for PostgreSQL to be ready
+echo "⏳ Waiting for PostgreSQL to be ready..."
+until docker exec person-postgres-db pg_isready -U admin -d persons_db > /dev/null 2>&1; do
+    sleep 2
+    echo "🔄 Still waiting for PostgreSQL..."
+done
+echo "✅ PostgreSQL is ready!"
+
 # Create .env files from .env.example if they don't exist
 if [ ! -f "person-details-fe/.env" ]; then
     echo "📄 Creating frontend .env file..."
@@ -27,10 +35,6 @@ if [ ! -f "person-details-be/.env" ]; then
     echo "📄 Creating backend .env file..."
     cp person-details-be/.env.example person-details-be/.env
 fi
-
-# Wait for PostgreSQL to be ready
-echo "⏳ Waiting for PostgreSQL to be ready..."
-sleep 5
 
 # Run database migration inside the Docker container
 echo "🔄 Running database migration inside Docker..."
