@@ -62,7 +62,7 @@ echo "✅ Backend started in the background!"
 
 # Start frontend in the background
 echo "🚀 Starting frontend..."
-cd ../person-details-fe && yarn dev & disown
+cd person-details-fe && yarn dev & disown
 echo "✅ Frontend started in the background!"
 
 echo "✅ Project is now running!"
