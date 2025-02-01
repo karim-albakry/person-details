@@ -1,5 +1,5 @@
-import setupTestDatabase from "./setupTestDB";
-import cleanupTestDatabase from "./globalTeardown";
+import setupTestDatabase from "./utils/setupTestDB";
+// import cleanupTestDatabase from "./utils/globalTeardown";
 
 import { SqlPersonRepository } from "../src/repositories/SqlPersonRepository";
 
@@ -9,11 +9,11 @@ describe("SqlPersonRepository (Test DB)", () => {
   beforeAll(async () => {
     await setupTestDatabase();
     sqlRepo = new SqlPersonRepository();
-  });
+  }); 
 
-  afterAll(async () => {
-    await cleanupTestDatabase();
-  });
+  // afterAll(async () => {
+  //   await cleanupTestDatabase();
+  // });
 
   test("should return persons from the test database", async () => {
     const persons = await sqlRepo.getPersons();

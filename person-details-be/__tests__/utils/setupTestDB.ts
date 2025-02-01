@@ -1,14 +1,14 @@
 import { Pool } from "pg";
 import dotenv from "dotenv";
 
-dotenv.config({ path: __dirname + "/../.env.test" });
+dotenv.config({ path: __dirname + "/../../.env.test" });
 
 const adminPool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
   password: process.env.DB_PASSWORD,
   port: Number(process.env.DB_PORT),
-  database: "postgres", // Connect to the default PostgreSQL database
+  database: "postgres",
 });
 
 const pool = new Pool({
@@ -25,7 +25,6 @@ export default async function setupTestDatabase() {
 
     console.log(`🚀 Checking if test database '${DB_NAME}' exists...`);
 
-    // Check if database exists before creating it
     const result = await adminPool.query(
       `SELECT 1 FROM pg_database WHERE datname = '${DB_NAME}'`
     );
@@ -76,6 +75,10 @@ export default async function setupTestDatabase() {
 
       INSERT INTO person_details (name, telephone_number, address, country)
       SELECT 'Edge Case User', '33-111222333', '3 Edge Road', 'Germany'
+      WHERE NOT EXISTS (SELECT 1 FROM person_details WHERE name = 'Edge Case User');
+
+      INSERT INTO person_details (name, telephone_number, address, country)
+      SELECT 'Hady Ahmed', '20-12345678', '50 Road Street', 'Egypt'
       WHERE NOT EXISTS (SELECT 1 FROM person_details WHERE name = 'Edge Case User');
     `);
 

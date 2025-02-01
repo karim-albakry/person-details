@@ -2,6 +2,8 @@ import { Pool } from "pg";
 import dotenv from "dotenv";
 import { IPersonRepository } from "./IPersonRepository";
 
+dotenv.config();
+
 export class SqlPersonRepository implements IPersonRepository {
   private pool: Pool;
 
@@ -22,22 +24,39 @@ export class SqlPersonRepository implements IPersonRepository {
     country: string = ""
   ): Promise<any[]> {
     let sqlQuery = `
-    SELECT name as name, 
-           telephone_number as telephone_number, 
-           address as address, 
-           country as country 
-    FROM person_details WHERE 1=1
-  `;
-  
-  if (name) {
-    sqlQuery += ` AND (name ILIKE '%${name.trim()}%' OR name ILIKE '% ${name.trim()}%')`; 
-  }
-  if (phone) sqlQuery += ` AND telephone_number ILIKE '%${phone.trim()}%'`;
-  if (address) sqlQuery += ` AND address ILIKE '%${address.trim()}%'`;
-  if (country) sqlQuery += ` AND country ILIKE '%${country.trim()}%'`;
+      SELECT name as name, 
+             telephone_number as telephone_number, 
+             address as address, 
+             country as country 
+      FROM person_details WHERE 1=1
+    `;
+
+    const params: any[] = [];
+    let paramIndex = 1;
+
+    if (name) {
+      sqlQuery += ` AND (name ILIKE $${paramIndex} OR name ILIKE $${paramIndex + 1})`;
+      params.push(`%${name.trim()}%`, `% ${name.trim()}%`);
+      paramIndex += 2;
+    }
+    if (phone) {
+      sqlQuery += ` AND telephone_number ILIKE $${paramIndex}`;
+      params.push(`%${phone.trim()}%`);
+      paramIndex++;
+    }
+    if (address) {
+      sqlQuery += ` AND address ILIKE $${paramIndex}`;
+      params.push(`%${address.trim()}%`);
+      paramIndex++;
+    }
+    if (country) {
+      sqlQuery += ` AND country ILIKE $${paramIndex}`;
+      params.push(`%${country.trim()}%`);
+      paramIndex++;
+    }
 
     try {
-      const res = await this.pool.query(sqlQuery);
+      const res = await this.pool.query(sqlQuery, params);
 
       return res.rows.map((row) => {
         const nameParts = row.name.split(" ");
@@ -53,7 +72,7 @@ export class SqlPersonRepository implements IPersonRepository {
         };
       });
     } catch (err) {
-      console.error(err);
+      console.error("❌ SQL Query Execution Error:", err);
       return [];
     }
   }

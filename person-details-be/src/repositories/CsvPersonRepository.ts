@@ -33,7 +33,7 @@ export class CsvPersonRepository implements IPersonRepository {
             const parsedCountry = addressParts.length > 1 ? addressParts[1].trim() : "";
 
             if (
-              (!name || firstName.toLowerCase().includes(name.toLowerCase()) || lastName.toLowerCase().includes(name.toLowerCase())) &&
+              (!name || `${firstName} ${lastName}`.toLowerCase().includes(name.toLowerCase().trim())) &&
               (!phone || telephoneNumber.includes(phone)) &&
               (!address || parsedAddress.toLowerCase().includes(address.toLowerCase())) &&
               (!country || parsedCountry.toLowerCase().includes(country.toLowerCase()))
