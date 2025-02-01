@@ -83,16 +83,22 @@ docker-compose up --build
 
 #### **Without Docker Compose (Only Database in Docker, Frontend & Backend Locally)**
 
-### **1️⃣ Database Setup**
-##### **Database (Run in Docker)**
+##### **1️⃣ Database Setup**
+###### **Database (Run in Docker)**
 ```sh
 docker run --name person-postgres-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=persons_db -p 5432:5432 -d postgres
 ```
 
-### **2️⃣ Environment Variables Setup**
+After setting up the database, **run the following migration** to initialize the database schema:
+
+```sh
+person-details-be/database/init.sql
+```
+
+##### **2️⃣ Environment Variables Setup**
 Create the required `.env` files for the frontend and backend based on the provided example files:
 
-#### **Backend `.env` file**
+###### **Backend `.env` file**
 Create `person-details-be/.env` with the following content:
 ```sh
 PORT=3000
@@ -103,14 +109,14 @@ DB_PASSWORD=admin
 DB_PORT=5432
 ```
 
-### **3️⃣ Frontend and Backend Setup**
-#### **Frontend `.env` file**
+##### **3️⃣ Frontend and Backend Setup**
+###### **Frontend `.env` file**
 Create `person-details-fe/.env` with the following content:
 ```sh
 VITE_BACKEND_URL=http://localhost:3000/api
 ```
 
-##### **Backend**
+###### **Backend**
 ```sh
 cd person-details-be
 npm install
@@ -118,7 +124,7 @@ npm run dev
 ```
 Runs on http://localhost:3000/api
 
-##### **Frontend**
+###### **Frontend**
 ```sh
 cd person-details-fe
 yarn install
