@@ -21,3 +21,4 @@
 # Ignore system files (Mac & Windows)
 .DS_Store
 Thumbs.db
+.vscode
