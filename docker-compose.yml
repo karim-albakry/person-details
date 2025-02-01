@@ -4,11 +4,11 @@ services:
   frontend:
     build: ./person-details-fe
     ports:
-      - "${FRONTEND_PORT:-5173}:80"  # Expose frontend on a fixed port for easier access
+      - "${FRONTEND_PORT:-5173}:80"  # Expose frontend on a fixed port
     depends_on:
       - backend
-    environment:
-      - VITE_BACKEND_URL=http://backend:3000/api  # Use backend's service name instead of port
+    env_file:
+      - ./person-details-fe/.env  # Ensure frontend environment variables are loaded
 
   backend:
     build: ./person-details-be
@@ -16,13 +16,8 @@ services:
       - "${BACKEND_PORT:-3000}:3000"
     depends_on:
       - database
-    environment:
-      - PORT=3000
-      - DB_USER=admin
-      - DB_HOST=database 
-      - DB_NAME=persons_db
-      - DB_PASSWORD=admin
-      - DB_PORT=5432
+    env_file:
+      - ./person-details-be/.env  # Use .env file for backend
 
   database:
     image: postgres

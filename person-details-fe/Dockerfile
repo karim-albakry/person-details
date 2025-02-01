@@ -1,13 +1,23 @@
+# Stage 1: Build
 FROM node:22-alpine AS build
 WORKDIR /app
+
+# Install dependencies
 COPY package.json yarn.lock ./
 RUN yarn install
-COPY . .
+
+# Copy source files and build
+COPY . . 
 RUN yarn build
 
+# Stage 2: Serve with Nginx
 FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Copy built frontend files to Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expose frontend port
 EXPOSE 80
+
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
