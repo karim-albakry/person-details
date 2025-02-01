@@ -33,23 +33,23 @@ if not exist "person-details-be\.env" (
 echo ⏳ Waiting for PostgreSQL to be ready...
 timeout /t 5 /nobreak >nul
 
-:: Run database migration inside the Docker container (Fixed Path Issue)
+:: Run database migration inside the Docker container
 echo 🔄 Running database migration inside Docker...
 docker cp person-details-be/database/init.sql person-postgres-db:/init.sql
 docker exec -i person-postgres-db psql -U admin -d persons_db -f /init.sql
 
-:: Install dependencies and start backend
+:: Install backend dependencies and start backend
 echo 📦 Installing backend dependencies...
 cd person-details-be
 npm install
-start /b npm run dev
+start cmd /k "npm run dev"
 cd ..
 
-:: Install dependencies and start frontend
+:: Install frontend dependencies and start frontend
 echo 📦 Installing frontend dependencies...
 cd person-details-fe
 yarn install
-start /b yarn dev
+start cmd /k "yarn dev"
 cd ..
 
 echo ✅ Manual setup complete! 
