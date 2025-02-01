@@ -60,13 +60,13 @@ if %ERRORLEVEL% NEQ 0 (
 cd ..
 echo ✅ Frontend installation completed!
 
-:: Start backend
+:: Start backend in a new persistent terminal
 echo 🚀 Starting backend...
-start cmd /c "cd person-details-be && npm run dev"
+start "Backend Server" cmd /k "cd person-details-be && npm run dev"
 
-:: Start frontend
+:: Start frontend in a new persistent terminal
 echo 🚀 Starting frontend...
-start cmd /c "cd person-details-fe && yarn dev"
+start "Frontend Server" cmd /k "cd person-details-fe && yarn dev"
 
 echo ✅ Project is now running!
 pause
