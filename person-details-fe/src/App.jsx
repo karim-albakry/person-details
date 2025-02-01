@@ -34,7 +34,9 @@ export default function App() {
       if (filters.country) params.append("country", filters.country);
 
       // Send request with query parameters
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/person-details?${params.toString()}`);
+      const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || window.VITE_BACKEND_URL || "http://localhost:3000/api";
+      const response = await axios.get(`${API_BASE_URL}/person-details?${params.toString()}`);
+
 
       // Avoid unnecessary re-renders
       if (JSON.stringify(response.data) !== JSON.stringify(persons)) {

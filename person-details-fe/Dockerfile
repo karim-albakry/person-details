@@ -19,9 +19,13 @@ FROM nginx:alpine
 
 # Copy built frontend files to Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose frontend port
+# Inject environment variables at runtime
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 80
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Use custom entrypoint to inject env variables
+CMD ["/entrypoint.sh"]
