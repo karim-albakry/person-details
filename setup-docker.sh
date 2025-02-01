@@ -5,10 +5,15 @@ set -e
 
 echo "🚀 Setting up the project..."
 
-# Check for Docker and Docker Compose
-if ! command -v docker &> /dev/null || ! command -v docker-compose &> /dev/null
-then
-    echo "❌ Docker or Docker Compose is not installed. Please install them first."
+# Ensure Docker is installed and accessible
+if ! docker -v &>/dev/null; then
+    echo "❌ Docker is not installed or not in PATH. Please install it first."
+    exit 1
+fi
+
+# Ensure Docker Compose is installed and accessible
+if ! docker compose version &>/dev/null; then
+    echo "❌ Docker Compose is not installed or not in PATH. Please install it first."
     exit 1
 fi
 
