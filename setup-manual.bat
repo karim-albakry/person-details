@@ -38,21 +38,35 @@ echo 🔄 Running database migration inside Docker...
 docker cp person-details-be/database/init.sql person-postgres-db:/init.sql
 docker exec -i person-postgres-db psql -U admin -d persons_db -f /init.sql
 
-:: Install backend dependencies and start backend
+:: Install backend dependencies
 echo 📦 Installing backend dependencies...
 cd person-details-be
-npm install
-start cmd /k "npm run dev"
+call npm install
+if %ERRORLEVEL% NEQ 0 (
+    echo ❌ Backend installation failed.
+    exit /b 1
+)
 cd ..
+echo ✅ Backend installation completed!
 
-:: Install frontend dependencies and start frontend
+:: Install frontend dependencies
 echo 📦 Installing frontend dependencies...
 cd person-details-fe
-yarn install
-start cmd /k "yarn dev"
+call yarn install
+if %ERRORLEVEL% NEQ 0 (
+    echo ❌ Frontend installation failed.
+    exit /b 1
+)
 cd ..
+echo ✅ Frontend installation completed!
 
-echo ✅ Manual setup complete! 
-echo 🔗 Frontend running at http://localhost:5173
-echo 🔗 Backend running at http://localhost:3000/api
+:: Start backend
+echo 🚀 Starting backend...
+start cmd /c "cd person-details-be && npm run dev"
+
+:: Start frontend
+echo 🚀 Starting frontend...
+start cmd /c "cd person-details-fe && yarn dev"
+
+echo ✅ Project is now running!
 pause
