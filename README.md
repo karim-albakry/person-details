@@ -60,6 +60,12 @@ For Windows:
 setup-local.bat
 ```
 
+To run the unit tests, use the following command:
+**Note:** Ensure that you are in the **person-details-be** directory and have installed the dependencies using **npm install**.
+```sh
+npm run test
+```
+
 ---
 
 ### **2️⃣ Manual Setup**
@@ -112,6 +118,12 @@ npm install
 npm run dev
 ```
 Runs on http://localhost:3000/api
+
+To run the unit tests, use the following command:
+**Note:** Ensure that you are in the **person-details-be** directory and have installed the dependencies using **npm install**.
+```sh
+npm run test
+```
 
 ###### **Frontend**
 ```sh
@@ -172,4 +184,3 @@ person-details/
 │── person-details-fe/    # Frontend (React)
 │── person-details-be/    # Backend (Node.js)
 │── README.md             # Instructions
-```
