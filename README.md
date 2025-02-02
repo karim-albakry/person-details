@@ -23,11 +23,11 @@ This repository contains both the **frontend (React)** and **backend (Node.js/Ex
 
 Before running the project, ensure that the following are installed on your local machine:
 
-### **For Local Setup (Non-Docker Users)**
+### **For Local Setup (Docker Users)**
 - **Docker**
 - **docker-compose**
 
-#### For local setup:
+#### For local setup (Non-Docker Users):
 - **Docker** (for the database, if not running PostgreSQL locally) or **PostgreSQL**
 - **Node.js**
 - **TypeScript**
