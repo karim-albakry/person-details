@@ -16,13 +16,14 @@ This repository contains both the **frontend (React)** and **backend (Node.js/Ex
        - [3️⃣ Frontend and Backend Setup](#3️⃣-frontend-and-backend-setup)
 3. [🚀 Architecture and Design Patterns](#-architecture-and-design-patterns)
 4. [🚀 API Documentation](#-api-documentation)
+5. [🚀 Running Tests](#-running-tests)
 5. [📂 Project Structure](#-project-structure)
 
 ## 🚀 Prerequisites
 
 Before running the project, ensure that the following are installed on your local machine:
 
-#### For automatic setup:
+### **For Local Setup (Non-Docker Users)**
 - **Docker**
 - **docker-compose**
 
@@ -60,12 +61,6 @@ For Windows:
 setup-local.bat
 ```
 
-To run the unit tests, use the following command:
-**Note:** Ensure that you are in the **person-details-be** directory and have installed the dependencies using **npm install**.
-```sh
-npm run test
-```
-
 ---
 
 ### **2️⃣ Manual Setup**
@@ -84,11 +79,19 @@ docker-compose up --build
 docker run --name person-postgres-db -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=persons_db -p 5432:5432 -d postgres
 ```
 
-After setting up the database, **run the following migration** to initialize the database schema:
+##### **Apply Database Migrations**
+```sh
+docker cp person-details-be/database/init.sql person-postgres-db:/docker-entrypoint-initdb.d/init.sql
+docker exec -i person-postgres-db psql -U admin -d persons_db -f /docker-entrypoint-initdb.d/init.sql
+```
+
+Or just tun the follwoing script inside your database after installation using your prefered tool such as **dbeaver**:
 
 ```sh
 person-details-be/database/init.sql
 ```
+
+
 
 ### **2️⃣ Environment Variables Setup**
 Create the required `.env` files for the frontend and backend based on the provided example files:
@@ -118,12 +121,6 @@ npm install
 npm run dev
 ```
 Runs on http://localhost:3000/api
-
-To run the unit tests, use the following command:
-**Note:** Ensure that you are in the **person-details-be** directory and have installed the dependencies using **npm install**.
-```sh
-npm run test
-```
 
 ###### **Frontend**
 ```sh
@@ -169,6 +166,20 @@ GET /api/person-details?name=John&phone=1234&address=Main St&country=USA
         "country": "USA"
     }
 ]
+```
+
+---
+
+## 🚀 Running Tests
+
+To run the **unit tests**, execute the following inside `person-details-be`:
+
+```sh
+npm run test
+```
+**Note:** Ensure dependencies are installed before running tests:
+```sh
+npm install
 ```
 
 ---
